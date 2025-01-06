@@ -9,6 +9,33 @@ import { Button } from "./components/ui/button";
 import { FileUp } from "lucide-react";
 
 const LandingPage = () => {
+
+    const fileInputRef = React.useRef(null);
+
+    const [file, setFile] = React.useState(null);
+
+    const handleButtonClick = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    }
+
+    const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        console.log(file)
+        setFile(file);
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = (event) => {
+                const fileContent = event?.target?.result;
+                console.log("File content:", fileContent);
+            };
+
+            reader.readAsText(file);
+        }
+    }
+
     return (
         <div className="min-h-screen flex flex-col width-full">
             <header className="border-b">
@@ -27,9 +54,6 @@ const LandingPage = () => {
                                         Pricing
                                     </NavigationMenuLink>
                                 </NavigationMenuItem>
-                                <NavigationMenuItem>
-                                    <Button variant="default">Sign In</Button>
-                                </NavigationMenuItem>
                             </NavigationMenuList>
                         </NavigationMenu>
                     </div>
@@ -45,10 +69,20 @@ const LandingPage = () => {
                         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
                             Upload your PDF documents and receive instant, intelligent feedback to improve your content quality and effectiveness.
                         </p>
-                        <Button size="lg" className="gap-2">
-                            <FileUp className="w-5 h-5" />
-                            Try It Now
-                        </Button>
+                        <div className="flex flex-col items-center">
+                            <input
+                                type="file"
+                                className='hidden'
+                                accept=".pdf, .doc, .docx"
+                                ref={fileInputRef}
+                                onChange={handleFileUpload}
+                            />
+                            <Button size="lg" className="gap-2" onClick={handleButtonClick}>
+                                <FileUp className="w-5 h-5" />
+                                Try It Now
+                            </Button>
+                            <p className="mt-2 text-center text-gray-700">{file?.name}</p>
+                        </div>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8 py-16">
