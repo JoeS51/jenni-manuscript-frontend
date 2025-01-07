@@ -13,6 +13,7 @@ const LandingPage = () => {
     const fileInputRef = React.useRef(null);
 
     const [file, setFile] = React.useState(null);
+    const [pdfUrl, setPdfUrl] = React.useState("");
 
     const handleButtonClick = () => {
         if (fileInputRef.current) {
@@ -27,12 +28,13 @@ const LandingPage = () => {
         if (file) {
             const reader = new FileReader();
 
-            reader.onload = (event) => {
-                const fileContent = event?.target?.result;
-                console.log("File content:", fileContent);
-            };
+            // reader.onload = (event) => {
+            //     const fileContent = event?.target?.result;
+            //     console.log("File content:", fileContent);
+            // };
 
-            reader.readAsText(file);
+            const url = URL.createObjectURL(file);
+            setPdfUrl(url);
         }
     }
 
@@ -83,6 +85,15 @@ const LandingPage = () => {
                             </Button>
                             <p className="mt-2 text-center text-gray-700">{file?.name}</p>
                         </div>
+                        {pdfUrl && (
+                            <div className="w-full h-screen border border-gray-200 rounded-lg">
+                                <iframe
+                                    src={pdfUrl}
+                                    className="w-full h-full rounded-lg"
+                                    title="PDF Viewer"
+                                />
+                            </div>
+                        )}
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8 py-16">
