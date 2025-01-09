@@ -4,20 +4,32 @@ import {
     NavigationMenuItem,
     NavigationMenuLink,
     NavigationMenuList,
-} from "./components/ui/navigation-menu";
-import { Button } from "./components/ui/button";
+} from "../components/ui/navigation-menu";
+import { Button } from "../components/ui/button";
 import { FileUp } from "lucide-react";
+import { sendChat } from '../api/chatCompletion';
 
 const LandingPage = () => {
 
-    const fileInputRef = React.useRef(null);
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-    const [file, setFile] = React.useState(null);
+    const [file, setFile] = React.useState<File | null>(null);
     const [pdfUrl, setPdfUrl] = React.useState("");
+    const [chatCompletion, setChatCompletion] = React.useState("");
 
     const handleButtonClick = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
+        }
+    }
+
+    const handleMessage = async () => {
+        try {
+            const response = await sendChat("Hello, Jenni!");
+            setChatCompletion(response.chatCompletion.choices[0].message.content);
+            console.log(response);
+        } catch (err) {
+            console.error("Error sending chat:", err);
         }
     }
 
@@ -83,6 +95,10 @@ const LandingPage = () => {
                                 <FileUp className="w-5 h-5" />
                                 Try It Now
                             </Button>
+                            <Button size="lg" className="gap-2" onClick={handleMessage}>
+                                Test
+                            </Button>
+                            {chatCompletion}
                             <p className="mt-2 text-center text-gray-700">{file?.name}</p>
                         </div>
                         {pdfUrl && (
