@@ -7,7 +7,8 @@ import {
 } from "../components/ui/navigation-menu";
 import { Button } from "../components/ui/button";
 import { FileUp } from "lucide-react";
-import { sendChat } from '../api/chatCompletion';
+import { sendChat } from '../api/ChatCompletion';
+import { NavLink } from "react-router";
 
 const LandingPage = () => {
 
@@ -33,8 +34,8 @@ const LandingPage = () => {
         }
     }
 
-    const handleFileUpload = (e) => {
-        const file = e.target.files[0];
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] || null;
         console.log(file)
         setFile(file);
         if (file) {
@@ -51,8 +52,8 @@ const LandingPage = () => {
     }
 
     return (
-        <div className="min-h-screen flex flex-col width-full">
-            <header className="border-b">
+        <div className="min-h-screen flex flex-col w-full">
+            <header className="border-b w-full">
                 <div className="container mx-auto px-4">
                     <div className="h-16 flex items-center justify-between">
                         <div className="text-xl font-bold">Jenni Manuscript</div>
@@ -84,32 +85,17 @@ const LandingPage = () => {
                             Upload your PDF documents and receive instant, intelligent feedback to improve your content quality and effectiveness.
                         </p>
                         <div className="flex flex-col items-center">
-                            <input
-                                type="file"
-                                className='hidden'
-                                accept=".pdf, .doc, .docx"
-                                ref={fileInputRef}
-                                onChange={handleFileUpload}
-                            />
-                            <Button size="lg" className="gap-2" onClick={handleButtonClick}>
-                                <FileUp className="w-5 h-5" />
-                                Try It Now
-                            </Button>
-                            <Button size="lg" className="gap-2" onClick={handleMessage}>
+                            <NavLink to="/feedback" end>
+                                <Button size="lg" className="gap-2" onClick={handleButtonClick}>
+                                    Try It Now
+                                </Button>
+                            </NavLink>
+                            {/* <Button size="lg" className="gap-2" onClick={handleMessage}>
                                 Test
                             </Button>
-                            {chatCompletion}
+                            {chatCompletion} */}
                             <p className="mt-2 text-center text-gray-700">{file?.name}</p>
                         </div>
-                        {pdfUrl && (
-                            <div className="w-full h-screen border border-gray-200 rounded-lg">
-                                <iframe
-                                    src={pdfUrl}
-                                    className="w-full h-full rounded-lg"
-                                    title="PDF Viewer"
-                                />
-                            </div>
-                        )}
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8 py-16">
