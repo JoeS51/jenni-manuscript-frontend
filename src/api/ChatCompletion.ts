@@ -18,4 +18,14 @@ export const sendChat = async (message: string) => {
     }
 }
 
+export const sendFile = async (file: FormData) => {
+    try {
+        const response = await instance.post('/upload', { file });
+        return response.data;
+    } catch (err) {
+        console.error("Error sending file: ", err);
+        throw err;
+    }
+}
+
 export default instance;
