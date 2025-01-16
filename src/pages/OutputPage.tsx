@@ -12,12 +12,14 @@ export default function OutputPage() {
     const [pdfUrl, setPdfUrl] = React.useState("");
     const [email, setEmail] = React.useState("");
 
-    const processBtnClick = () => {
+    const processBtnClick = async () => {
         const formData = new FormData();
         if (file == null) return;
         formData.append("file", file);
         formData.append("email", email);
-        sendFile(formData);
+        console.log(formData);
+        const resp = await sendFile(formData);
+        console.log(resp)
     }
 
     const handleButtonClick = () => {
