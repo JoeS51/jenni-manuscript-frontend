@@ -25,7 +25,7 @@ export const sendFile = async (formData: FormData) => {
                 'Content-Type': 'multipart/form-data', // Ensure the correct content type is set
             },
         });
-        return response.data;
+        return response;
     } catch (err) {
         console.error("Error sending file: ", err);
         throw err;

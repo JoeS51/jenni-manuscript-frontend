@@ -11,23 +11,51 @@ export default function OutputPage() {
     const [file, setFile] = React.useState<File | null>(null);
     const [pdfUrl, setPdfUrl] = React.useState("");
     const [email, setEmail] = React.useState("");
+    const [processErrorMessage, setProcessErrorMessage] = React.useState<string | null>(null); // State to store error/success message on process manuscript
+    const [processingInitiatedSuccesfully, setProcessingInitiatedSuccesfully] = React.useState<boolean>(false); // State to handle processing status
 
+    //for process manuscript button
     const processBtnClick = async () => {
         const formData = new FormData();
         if (file == null) return;
         formData.append("file", file);
         formData.append("email", email);
         console.log(formData);
-        const resp = await sendFile(formData);
-        console.log(resp)
+
+        try {
+            const resp = await sendFile(formData);
+            console.log(resp)
+            console.log(`resp status is ${resp.status}`)
+            if (resp.status == 200) {
+                setProcessingInitiatedSuccesfully(true);
+            } else {
+                setProcessErrorMessage(resp.data.message)
+            }
+        }catch (err: any) {
+            // Handle errors, including network issues
+            console.error("Error processing file upload:", err);
+            // Display appropriate error message
+            if (err.response) {
+                // Server responded with an error status code
+                setProcessErrorMessage(`Error: ${err.response.status} - ${err.response.data?.message || "Unknown error"}`);
+            } else if (err.request) {
+                // No response was received
+                setProcessErrorMessage("No response received from the server. Please try again.");
+            } else {
+                // Something else went wrong
+                setProcessErrorMessage(`An error occurred: ${err.message}`);
+            }
+        }
     }
 
+    //for fake file upload button
     const handleButtonClick = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
         }
     };
 
+    //for 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const uploadedFile = e.target.files?.[0] || null;
         setFile(uploadedFile);
@@ -115,6 +143,18 @@ export default function OutputPage() {
                     </Button>
                 </CardFooter>
             </Card>
+
+            {/* Render the Processing Card at the bottom */}
+            {processingInitiatedSuccesfully && (
+                <Card className="w-full max-w-3xl mt-4">
+                    <CardHeader className="text-center">
+                        <CardTitle className="text-3xl font-bold">Processing...</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-center">
+                        <p className="text-lg text-gray-600">We are now evaluating your manuscript. Your feedback will be sent to {email} in approximately 1 hour.</p>
+                    </CardContent>
+                </Card>
+            )}
         </div>
     );
 }
