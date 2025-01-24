@@ -6,6 +6,13 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from '../components/ui/label';
 import { sendFile } from '../api/ChatCompletion';
 import { ThreeDots } from 'react-loader-spinner'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
 
 export default function OutputPage() {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -15,6 +22,8 @@ export default function OutputPage() {
     const [processErrorMessage, setProcessErrorMessage] = React.useState<string | null>(null); // State to store error/success message on process manuscript
     const [processingInitiatedSuccesfully, setProcessingInitiatedSuccesfully] = React.useState<boolean>(false); // State to handle processing status
     const [loading, setLoading] = React.useState<boolean>(false);
+    const [selectedConference, setSelectedConference] = React.useState<string>("");
+    const conferences = ["AAAI", "IJCAI", "ICLR", "ICML", "NeurIPS"];
 
     //for process manuscript button
     const processBtnClick = async () => {
@@ -23,6 +32,7 @@ export default function OutputPage() {
         setLoading(true);
         formData.append("file", file);
         formData.append("email", email);
+        formData.append("conference", selectedConference);
         console.log(formData);
 
         try {
@@ -63,6 +73,8 @@ export default function OutputPage() {
 
     //for 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log("in handleFileUpload")
+        console.log("e.target.files", e.target.files?.[0]);
         const uploadedFile = e.target.files?.[0] || null;
         setFile(uploadedFile);
         if (uploadedFile) {
@@ -123,7 +135,29 @@ export default function OutputPage() {
 
                     <div className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        className="w-full justify-between"
+                                    >
+                                        {selectedConference || "Select Conference"}
+                                        <ChevronDown className="h-4 w-4 opacity-50" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-full">
+                                    {conferences.map((conference) => (
+                                        <DropdownMenuItem
+                                            key={conference}
+                                            onClick={() => setSelectedConference(conference)}
+                                        >
+                                            {conference}
+                                        </DropdownMenuItem>
+                                    ))}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                        <div className="space-y-2">
                             <div className="relative">
                                 <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                                 <Input
@@ -142,7 +176,7 @@ export default function OutputPage() {
                     <Button
                         size="lg"
                         className="w-full bg-black hover:bg-gray-800"
-                        disabled={!file || !email || loading}
+                        disabled={!file || !email || !selectedConference || loading}
                         onClick={processBtnClick}
                     >
                         {loading ? <ThreeDots
