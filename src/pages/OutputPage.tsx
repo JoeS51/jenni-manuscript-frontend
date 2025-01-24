@@ -5,6 +5,7 @@ import { FileUp, Mail } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Label } from '../components/ui/label';
 import { sendFile } from '../api/ChatCompletion';
+import { ThreeDots } from 'react-loader-spinner'
 
 export default function OutputPage() {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -13,11 +14,13 @@ export default function OutputPage() {
     const [email, setEmail] = React.useState("");
     const [processErrorMessage, setProcessErrorMessage] = React.useState<string | null>(null); // State to store error/success message on process manuscript
     const [processingInitiatedSuccesfully, setProcessingInitiatedSuccesfully] = React.useState<boolean>(false); // State to handle processing status
+    const [loading, setLoading] = React.useState<boolean>(false);
 
     //for process manuscript button
     const processBtnClick = async () => {
         const formData = new FormData();
         if (file == null) return;
+        setLoading(true);
         formData.append("file", file);
         formData.append("email", email);
         console.log(formData);
@@ -31,9 +34,10 @@ export default function OutputPage() {
             } else {
                 setProcessErrorMessage(resp.data.message)
             }
-        }catch (err: any) {
+        } catch (err: any) {
             // Handle errors, including network issues
             console.error("Error processing file upload:", err);
+            console.log(err.response.data)
             // Display appropriate error message
             if (err.response) {
                 // Server responded with an error status code
@@ -45,6 +49,8 @@ export default function OutputPage() {
                 // Something else went wrong
                 setProcessErrorMessage(`An error occurred: ${err.message}`);
             }
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -136,10 +142,15 @@ export default function OutputPage() {
                     <Button
                         size="lg"
                         className="w-full bg-black hover:bg-gray-800"
-                        disabled={!file || !email}
+                        disabled={!file || !email || loading}
                         onClick={processBtnClick}
                     >
-                        Process Manuscript
+                        {loading ? <ThreeDots
+                            height="40"
+                            width="40"
+                            color='white'
+                            radius="10"
+                        /> : "Process Manuscript"}
                     </Button>
                 </CardFooter>
             </Card>
