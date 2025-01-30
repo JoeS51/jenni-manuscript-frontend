@@ -23,7 +23,7 @@ export default function OutputPage() {
     const [processingInitiatedSuccesfully, setProcessingInitiatedSuccesfully] = React.useState<boolean>(false); // State to handle processing status
     const [loading, setLoading] = React.useState<boolean>(false);
     const [selectedConference, setSelectedConference] = React.useState<string>("");
-    const conferences = ["AAAI", "IJCAI", "ICLR", "ICML", "NeurIPS"];
+    const conferences = ["IEEE", "Lancert", "Nature"];
 
     //for process manuscript button
     const processBtnClick = async () => {
