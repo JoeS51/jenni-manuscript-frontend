@@ -200,6 +200,19 @@ export default function OutputPage() {
                     </CardContent>
                 </Card>
             )}
+
+            {/* Render Error Message Card */}
+            {processErrorMessage && (
+                <Card className="w-full max-w-3xl mt-4 border-red-200">
+                    <CardHeader className="text-center">
+                        <CardTitle className="text-3xl font-bold text-red-600">Error</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-center">
+                        <p className="text-lg text-gray-600">{processErrorMessage}</p>
+                        <p className="text-sm text-gray-500 mt-2">Please try again or contact support if the issue persists.</p>
+                    </CardContent>
+                </Card>
+            )}
         </div>
     );
 }
