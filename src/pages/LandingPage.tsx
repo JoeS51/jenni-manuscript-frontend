@@ -71,6 +71,20 @@ const LandingPage = () => {
                                         Pricing
                                     </NavigationMenuLink>
                                 </NavigationMenuItem>
+                                <NavigationMenuItem>
+                                    <NavLink to="/login">
+                                        <Button className="bg-blue-600 hover:bg-blue-700 px-4 py-2">
+                                            Log in
+                                        </Button>
+                                    </NavLink>
+                                </NavigationMenuItem>
+                                <NavigationMenuItem>
+                                    <NavLink to="/signup">
+                                        <Button className="bg-blue-600 hover:bg-blue-700 px-4 py-2">
+                                            Sign up
+                                        </Button>
+                                    </NavLink>
+                                </NavigationMenuItem>
                             </NavigationMenuList>
                         </NavigationMenu>
                     </div>
