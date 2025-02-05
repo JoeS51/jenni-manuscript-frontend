@@ -32,7 +32,7 @@ export default function OutputPage() {
         setLoading(true);
         formData.append("file", file);
         formData.append("email", email);
-        formData.append("conference", selectedConference);
+        formData.append("journalType", selectedConference);
         console.log(formData);
 
         try {
