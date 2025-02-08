@@ -1,10 +1,18 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'https://jenni-manuscript-backend.onrender.com/',
+    //baseURL: 'https://jenni-manuscript-backend.onrender.com/',
+    baseURL: 'http://localhost:8080/',
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',
+    },
+
+    onDownloadProgress: (progressEvent) => {
+        const xhr = progressEvent.event.target;
+        const responseText = xhr.responseText;
+        // Process the received data
+        console.log(responseText);
     },
 });
 
