@@ -97,7 +97,7 @@ export default function OutputPage() {
                         <input
                             type="file"
                             className="hidden"
-                            accept=".pdf, .doc, .docx"
+                            accept=".pdf, .zip, .tex, .tec"
                             ref={fileInputRef}
                             onChange={handleFileUpload}
                         />
@@ -117,7 +117,7 @@ export default function OutputPage() {
                                     )}
                                 </p>
                                 <p className="text-xs text-gray-500 mt-1">
-                                    PDF, DOC, or DOCX files supported
+                                    PDF, ZIP, TEX, TEC
                                 </p>
                             </div>
                         </div>
