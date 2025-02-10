@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import {
     NavigationMenu,
     NavigationMenuItem,
@@ -6,50 +6,11 @@ import {
     NavigationMenuList,
 } from "../components/ui/navigation-menu";
 import { Button } from "../components/ui/button";
-import { FileUp } from "lucide-react";
-import { sendChat } from '../api/ChatCompletion';
 import { NavLink } from "react-router";
 
 const LandingPage = () => {
 
-    const fileInputRef = React.useRef<HTMLInputElement>(null);
-
-    const [file, setFile] = React.useState<File | null>(null);
-    const [pdfUrl, setPdfUrl] = React.useState("");
-    const [chatCompletion, setChatCompletion] = React.useState("");
-
-    const handleButtonClick = () => {
-        if (fileInputRef.current) {
-            fileInputRef.current.click();
-        }
-    }
-
-    const handleMessage = async () => {
-        try {
-            const response = await sendChat("Hello, Jenni!");
-            setChatCompletion(response.chatCompletion.choices[0].message.content);
-            console.log(response);
-        } catch (err) {
-            console.error("Error sending chat:", err);
-        }
-    }
-
-    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0] || null;
-        console.log(file)
-        setFile(file);
-        if (file) {
-            const reader = new FileReader();
-
-            // reader.onload = (event) => {
-            //     const fileContent = event?.target?.result;
-            //     console.log("File content:", fileContent);
-            // };
-
-            const url = URL.createObjectURL(file);
-            setPdfUrl(url);
-        }
-    }
+    // const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     return (
         <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-50">

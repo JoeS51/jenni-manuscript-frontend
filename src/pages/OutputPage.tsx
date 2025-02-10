@@ -3,7 +3,6 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { FileUp, Mail } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
-import { Label } from '../components/ui/label';
 import { sendFile } from '../api/ChatCompletion';
 import { ThreeDots } from 'react-loader-spinner'
 import {
@@ -17,7 +16,6 @@ import { ChevronDown } from "lucide-react";
 export default function OutputPage() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [file, setFile] = React.useState<File | null>(null);
-    const [pdfUrl, setPdfUrl] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [processErrorMessage, setProcessErrorMessage] = React.useState<string | null>(null); // State to store error/success message on process manuscript
     const [processingInitiatedSuccesfully, setProcessingInitiatedSuccesfully] = React.useState<boolean>(false); // State to handle processing status
@@ -77,10 +75,6 @@ export default function OutputPage() {
         console.log("e.target.files", e.target.files?.[0]);
         const uploadedFile = e.target.files?.[0] || null;
         setFile(uploadedFile);
-        if (uploadedFile) {
-            const url = URL.createObjectURL(uploadedFile);
-            setPdfUrl(url);
-        }
     };
 
     return (
