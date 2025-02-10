@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'https://jenni-manuscript-backend.onrender.com/',
+    // baseURL: 'https://jenni-manuscript-backend.onrender.com/',
+    // baseURL: 'http://localhost:3000', // for local testing
+    baseURL: 'https://jenni-manuscript-backend.fly.dev/', // for production
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',
