@@ -19,7 +19,7 @@ export function Pricing() {
 
       <div className="max-w-4xl mx-auto flex flex-col-reverse md:flex-row gap-8 px-4">
         {/* Benefits Stack */}
-        <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-1 gap-6">
+        <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-1 place-content-evenly">
           <div className="flex items-start space-x-4">
             <StarIcon className="w-6 h-6 text-blue-600 shrink-0" />
             <div className="text-left max-w-sm">
@@ -82,7 +82,7 @@ export function Pricing() {
                 Email support
               </li>
             </ul>
-            <Button className="w-full bg-blue-600 hover:bg-blue-700">
+            <Button variant="primary" className="w-full">
               Get Started
             </Button>
           </div>

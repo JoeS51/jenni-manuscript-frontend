@@ -57,9 +57,7 @@ export function Header() {
               <Button variant="outline">Log in</Button>
             </NavLink>
             <NavLink to="/signup">
-              <Button className="bg-blue-600 hover:bg-blue-700 px-4 py-2">
-                Sign up
-              </Button>
+              <Button variant="primary">Sign up</Button>
             </NavLink>
           </div>
         </div>
