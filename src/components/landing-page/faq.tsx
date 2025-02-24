@@ -18,7 +18,7 @@ export function FAQ() {
         </p>
       </div>
 
-      <div className="max-w-3xl mx-auto border border-zinc-200 rounded-lg overflow-hidden">
+      <div className="max-w-4xl mx-auto border border-zinc-200 rounded-lg overflow-hidden">
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
             <AccordionTrigger>

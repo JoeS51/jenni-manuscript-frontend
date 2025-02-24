@@ -22,6 +22,10 @@ const LandingPage = () => {
             quote="Using pre-submission manuscript reviews are a great way to reduce the frustrating process of desk rejection."
             personName="Anna Guo"
             personRole="Professor of Computer Science"
+            highlightedPhrases={[
+              "pre-submission manuscript reviews",
+              "frustrating process of desk rejection.",
+            ]}
           />
           <Features />
           <FAQ />

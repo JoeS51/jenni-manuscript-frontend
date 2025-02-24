@@ -7,7 +7,7 @@ export function Hero() {
       <h1 className="text-4xl md:text-5xl lg:text-6xl tracking-tight font-bold mb-6 max-w-3xl mx-auto">
         Avoid Desk Rejection with AI-Powered Manuscript Review
       </h1>
-      <p className="text-xl text-zinc-600 mb-12 max-w-2xl mx-auto">
+      <p className="text-xl text-zinc-600 mb-12 max-w-2xl mx-auto leading-snug">
         Increase your chances of publication and avoid desk rejection with
         expert AI review of your manuscript. Upload your paper and get
         actionable insights in minutes.
