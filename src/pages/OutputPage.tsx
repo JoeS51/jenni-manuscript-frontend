@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { FileUp, Mail } from "lucide-react";
@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
+import { addConference, getConferences, type Conference } from '../api/conferenceApi';
 
 export default function OutputPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -31,27 +32,41 @@ export default function OutputPage() {
   const [currentStep, setCurrentStep] = React.useState<number>(1);
   const [customRequirements, setCustomRequirements] = React.useState<string>("");
   const [websiteUrl, setWebsiteUrl] = React.useState<string>("");
-  const conferences = ["IEEE", "Lancert", "Nature", "Other"];
+  const [customJournalName, setCustomJournalName] = React.useState<string>("");
+  const [isSavingJournal, setIsSavingJournal] = React.useState(false);
+  const [conferences, setConferences] = React.useState<Conference[]>([]);
+
+  useEffect(() => {
+    const loadConferences = async () => {
+      try {
+        const fetchedConferences = await getConferences();
+        setConferences(fetchedConferences);
+      } catch (error) {
+        console.error('Error loading conferences:', error);
+      }
+    };
+
+    loadConferences();
+  }, []);
 
   //for process manuscript button
   const processBtnClick = async () => {
     const formData = new FormData();
     if (file == null) return;
     setLoading(true);
-    formData.append("file", file);
-    formData.append("email", email);
-    formData.append("journalType", selectedConference);
-    if (selectedConference === "Other") {
-      formData.append("requirements", customRequirements);
-      if (websiteUrl) {
-        formData.append("websiteUrl", websiteUrl);
-      }
-    }
-    console.log(formData);
 
     try {
+      formData.append("file", file);
+      formData.append("email", email);
+      formData.append("journalType", selectedConference);
+      if (selectedConference === "Other") {
+        formData.append("requirements", customRequirements);
+        if (websiteUrl) {
+          formData.append("websiteUrl", websiteUrl);
+        }
+      }
+      
       const resp = await sendFile(formData);
-      console.log(resp);
       console.log(`resp status is ${resp.status}`);
       if (resp.status == 200) {
         setProcessingInitiatedSuccesfully(true);
@@ -59,24 +74,18 @@ export default function OutputPage() {
         setProcessErrorMessage(resp.data.message);
       }
     } catch (err: any) {
-      // Handle errors, including network issues
-      console.error("Error processing file upload:", err);
-      console.log(err.response.data);
-      // Display appropriate error message
+      console.error("Error:", err);
       if (err.response) {
-        // Server responded with an error status code
         setProcessErrorMessage(
           `Error: ${err.response.status} - ${
             err.response.data?.message || "Unknown error"
           }`
         );
       } else if (err.request) {
-        // No response was received
         setProcessErrorMessage(
           "No response received from the server. Please try again."
         );
       } else {
-        // Something else went wrong
         setProcessErrorMessage(`An error occurred: ${err.message}`);
       }
     } finally {
@@ -131,7 +140,41 @@ export default function OutputPage() {
     );
   };
 
+  const saveNewJournal = async () => {
+    if (!customJournalName || !customRequirements) return;
+    
+    setIsSavingJournal(true);
+    try {
+      const newConference = await addConference({
+        name: customJournalName,
+        website_url: websiteUrl || undefined,
+        requirements: customRequirements
+      });
+      console.log('Successfully added new conference:', newConference);
+      
+      // Refresh the conferences list
+      const updatedConferences = await getConferences();
+      setConferences(updatedConferences);
+      
+      // Update selected conference to the newly created one
+      setSelectedConference(customJournalName);
+      
+      // Clear the "Other" fields
+      setCustomJournalName("");
+      
+      // Show success message (you might want to add a toast or other UI feedback)
+      alert('Successfully saved new journal template!');
+    } catch (error) {
+      console.error('Error saving new journal:', error);
+      alert('Failed to save journal template. Please try again.');
+    } finally {
+      setIsSavingJournal(false);
+    }
+  };
+
   const JournalStep = () => {
+    const canSaveJournal = customJournalName && customRequirements && selectedConference === "Other";
+    
     return (
       <div className="space-y-4">
         <div className="space-y-2">
@@ -142,27 +185,53 @@ export default function OutputPage() {
                 <ChevronDown className="h-4 w-4 opacity-50" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-full">
+            <DropdownMenuContent 
+              className="w-[var(--radix-dropdown-menu-trigger-width)]"
+              align="start"
+            >
               {conferences.map((conference) => (
                 <DropdownMenuItem
-                  key={conference}
-                  onClick={() => {
-                    setSelectedConference(conference);
-                    if (conference !== "Other") {
-                      setCustomRequirements("");
-                      setWebsiteUrl("");
-                    }
+                  key={conference.id}
+                  onSelect={() => {
+                    setSelectedConference(conference.name);
+                    setCustomJournalName("");
+                    setWebsiteUrl(conference.website_url || "");
+                    setCustomRequirements(conference.requirements || "");
                   }}
                 >
-                  {conference}
+                  {conference.name}
                 </DropdownMenuItem>
               ))}
+              <DropdownMenuItem
+                onSelect={() => {
+                  setSelectedConference("Other");
+                  setWebsiteUrl("");
+                  setCustomRequirements("");
+                  setCustomJournalName("");
+                }}
+              >
+                Other
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
         
         {selectedConference === "Other" && (
           <div className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="journalName" className="text-sm text-zinc-600">
+                Journal Name
+              </label>
+              <Input
+                id="journalName"
+                type="text"
+                placeholder="Enter the journal name"
+                value={customJournalName}
+                onChange={(e) => setCustomJournalName(e.target.value)}
+                className="text-sm"
+              />
+            </div>
+
             <div className="space-y-2">
               <label htmlFor="website" className="text-sm text-zinc-600">
                 Website URL (optional)
@@ -189,6 +258,22 @@ export default function OutputPage() {
                 onChange={(e) => setCustomRequirements(e.target.value)}
               />
             </div>
+
+            {canSaveJournal && (
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={saveNewJournal}
+                disabled={isSavingJournal}
+              >
+                {isSavingJournal ? (
+                  <ThreeDots height="20" width="20" color="currentColor" radius="9" />
+                ) : (
+                  "Save as New Journal Template"
+                )}
+              </Button>
+            )}
           </div>
         )}
       </div>
@@ -214,6 +299,13 @@ export default function OutputPage() {
       </div>
     );
   };
+
+  const isNextButtonDisabled = 
+    (currentStep === 1 && !file) ||
+    (currentStep === 2 && (
+      !selectedConference || 
+      (selectedConference === "Other" && (!customJournalName || !customRequirements))
+    ));
 
   return (
     <div className="min-h-screen p-6 flex flex-col items-center">
@@ -259,10 +351,7 @@ export default function OutputPage() {
           {currentStep < 3 ? (
             <Button
               onClick={() => setCurrentStep((prev) => prev + 1)}
-              disabled={
-                (currentStep === 1 && !file) ||
-                (currentStep === 2 && (!selectedConference || (selectedConference === "Other" && !customRequirements)))
-              }
+              disabled={isNextButtonDisabled}
             >
               Next
             </Button>
