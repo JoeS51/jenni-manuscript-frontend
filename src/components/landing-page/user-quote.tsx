@@ -14,7 +14,7 @@ const UserQuote: React.FC<UserQuoteProps> = ({
   personRole,
 }) => {
   return (
-    <div className="flex flex-col items-center max-w-3xl mx-auto p-8">
+    <div className="flex flex-col items-center max-w-3xl mx-auto py-8">
       {/* Logo */}
       {logo && (
         <div className="mb-8">

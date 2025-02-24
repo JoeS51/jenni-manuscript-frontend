@@ -11,10 +11,10 @@ const LandingPage = () => {
   // const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   return (
-    <div className="min-h-screen max-w-6xl flex flex-col">
+    <div className="min-h-screen max-w-5xl flex flex-col">
       <Header />
       <main className="flex-grow">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-1">
           <Hero />
           <HowItWorks />
           <Pricing />
