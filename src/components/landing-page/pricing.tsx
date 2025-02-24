@@ -11,7 +11,9 @@ export function Pricing() {
     <div id="pricing" className="py-20">
       <div className="text-center mb-16">
         <h2 className="text-blue-600 font-semibold mb-4">Pricing</h2>
-        <h3 className="text-4xl font-bold mb-4">Simple, Transparent Pricing</h3>
+        <h3 className="text-4xl font-bold mb-4 tracking-tight">
+          Simple, Transparent Pricing
+        </h3>
         <p className="text-zinc-600 text-xl max-w-md mx-auto">
           One plan for all your manuscript needs
         </p>

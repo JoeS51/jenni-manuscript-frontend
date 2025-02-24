@@ -10,7 +10,9 @@ export function FAQ() {
     <div className="py-20">
       <div className="text-center mb-16">
         <h2 className="text-blue-600 font-semibold mb-4">FAQ</h2>
-        <h3 className="text-4xl font-bold mb-2">Frequently Asked Questions</h3>
+        <h3 className="text-4xl font-bold mb-2 tracking-tight">
+          Frequently Asked Questions
+        </h3>
         <p className="text-zinc-600 text-xl max-w-md mx-auto">
           Everything you need to know about our manuscript review service
         </p>

@@ -7,7 +7,7 @@ export function Footer() {
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div className="text-center md:text-left">
-            <h4 className="font-semibold">Manuscript Check</h4>
+            <h4 className="font-semibold tracking-tighter">Manuscript Check</h4>
             <p className="text-sm text-zinc-600">
               Making document feedback smarter and faster.
             </p>

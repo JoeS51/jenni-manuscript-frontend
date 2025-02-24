@@ -16,7 +16,9 @@ export function Header() {
           {/* Left section - Logo */}
           <div className="flex items-center space-x-2">
             <DocumentCheckIcon className="h-8 w-8 text-blue-600" />
-            <span className="font-semibold text-lg">Manuscript Check</span>
+            <span className="font-semibold text-l tracking-tighter">
+              Manuscript Check
+            </span>
           </div>
 
           {/* Middle section - Navigation links */}

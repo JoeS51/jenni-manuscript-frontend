@@ -11,7 +11,7 @@ export function Features() {
       {/* Intro to Features */}
       <div className="text-center mb-16">
         <h2 className="text-blue-600 font-semibold mb-4">Features</h2>
-        <h3 className="text-4xl font-bold mb-4">
+        <h3 className="text-4xl font-bold mb-4 tracking-tight">
           Comprehensive Analysis Tools
         </h3>
         <p className="text-zinc-600 text-xl max-w-md mx-auto">

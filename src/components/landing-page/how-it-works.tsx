@@ -11,7 +11,7 @@ export function HowItWorks() {
       {/* Intro to How it Works */}
       <div className="text-center mb-16">
         <h2 className="text-blue-600 font-semibold mb-4">How it Works</h2>
-        <h3 className="text-4xl font-bold mb-4">
+        <h3 className="text-4xl font-bold mb-4 tracking-tight">
           Manuscript Review in 3 Steps
         </h3>
         <p className="text-zinc-600 text-xl max-w-md mx-auto">
