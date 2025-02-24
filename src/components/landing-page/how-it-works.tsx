@@ -7,7 +7,7 @@ import { FeatureCard } from "./feature-card";
 
 export function HowItWorks() {
   return (
-    <div className="py-20">
+    <div className="py-16">
       {/* Intro to How it Works */}
       <div className="text-center mb-16">
         <h2 className="text-blue-600 font-semibold mb-4">How it Works</h2>

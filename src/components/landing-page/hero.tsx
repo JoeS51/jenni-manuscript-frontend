@@ -3,7 +3,7 @@ import { NavLink } from "react-router";
 
 export function Hero() {
   return (
-    <div className="py-24 text-center">
+    <div className="py-16 text-center">
       <h1 className="text-6xl tracking-tight font-bold mb-6 max-w-3xl mx-auto">
         Avoid Desk Rejection with AI-Powered Manuscript Review
       </h1>

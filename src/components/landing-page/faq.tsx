@@ -7,7 +7,7 @@ import {
 
 export function FAQ() {
   return (
-    <div className="py-20">
+    <div className="py-16">
       <div className="text-center mb-16">
         <h2 className="text-blue-600 font-semibold mb-4">FAQ</h2>
         <h3 className="text-4xl font-bold mb-2 tracking-tight">

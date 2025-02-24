@@ -5,10 +5,10 @@ import {
   QueueListIcon,
   CheckIcon,
 } from "@heroicons/react/20/solid";
-
+import { NavLink } from "react-router";
 export function Pricing() {
   return (
-    <div id="pricing" className="py-20">
+    <div id="pricing" className="py-16">
       <div className="text-center mb-16">
         <h2 className="text-blue-600 font-semibold mb-4">Pricing</h2>
         <h3 className="text-4xl font-bold mb-4 tracking-tight">
@@ -84,9 +84,11 @@ export function Pricing() {
                 Email support
               </li>
             </ul>
-            <Button variant="primary" className="w-full">
-              Get Started
-            </Button>
+            <NavLink to="/feedback">
+              <Button variant="primary" className="w-full">
+                Get Started
+              </Button>
+            </NavLink>
           </div>
         </div>
       </div>

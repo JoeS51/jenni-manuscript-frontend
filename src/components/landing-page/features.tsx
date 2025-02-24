@@ -7,7 +7,7 @@ import { FeatureCard } from "./feature-card";
 
 export function Features() {
   return (
-    <div id="features" className="py-20">
+    <div id="features" className="py-16">
       {/* Intro to Features */}
       <div className="text-center mb-16">
         <h2 className="text-blue-600 font-semibold mb-4">Features</h2>
@@ -24,19 +24,19 @@ export function Features() {
         <FeatureCard
           icon={<CursorArrowRaysIcon className="w-6 h-6 text-blue-600" />}
           title="Journal-Specific Feedback"
-          description="We provide feedback with your intended publication in mind."
+          description="We provide targetted feedback with your intended publication or custom rubric in mind."
         />
 
         <FeatureCard
           icon={<StarIcon className="w-6 h-6 text-blue-600" />}
           title="Section Scoring"
-          description="Get feedback metrics on each section of your document."
+          description="Get feedback metrics on each section of your document from abstract to methods."
         />
 
         <FeatureCard
           icon={<ArrowTrendingUpIcon className="w-6 h-6 text-blue-600" />}
           title="Smart Suggestions"
-          description="Actionable steps to increase your chances of publication success."
+          description="Clearly written, actionable steps to increase your chances of publication success."
         />
       </div>
     </div>
