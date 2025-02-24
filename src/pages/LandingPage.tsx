@@ -6,7 +6,7 @@ import { Features } from "../components/landing-page/features";
 import { Pricing } from "../components/landing-page/pricing";
 import { FAQ } from "../components/landing-page/faq";
 import { Footer } from "../components/landing-page/footer";
-
+import UserQuote from "../components/landing-page/user-quote";
 const LandingPage = () => {
   // const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -18,6 +18,11 @@ const LandingPage = () => {
           <Hero />
           <HowItWorks />
           <Pricing />
+          <UserQuote
+            quote="Using pre-submission manuscript reviews are a great way to reduce the frustrating process of desk rejection."
+            personName="Anna Guo"
+            personRole="Professor of Computer Science"
+          />
           <Features />
           <FAQ />
         </div>

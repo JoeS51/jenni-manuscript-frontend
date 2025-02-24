@@ -10,7 +10,7 @@ import { DocumentCheckIcon } from "@heroicons/react/20/solid";
 
 export function Header() {
   return (
-    <header className="border-b bg-white/50 backdrop-blur-lg sticky top-0 z-50">
+    <header className="bg-white/50 backdrop-blur-lg sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="h-16 flex items-center justify-between">
           {/* Left section - Logo */}
@@ -27,7 +27,7 @@ export function Header() {
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuLink
-                    className="px-4 py-2 text-zinc-600 hover:text-blue-600 transition-colors cursor-pointer"
+                    className="px-4  text-zinc-600 hover:text-blue-600 transition-colors cursor-pointer"
                     onClick={() => {
                       document
                         .getElementById("features")
@@ -39,7 +39,7 @@ export function Header() {
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <NavigationMenuLink
-                    className="px-4 py-2 text-zinc-600 hover:text-blue-600 transition-colors cursor-pointer"
+                    className="px-4 text-zinc-600 hover:text-blue-600 transition-colors cursor-pointer"
                     onClick={() => {
                       document
                         .getElementById("pricing")
