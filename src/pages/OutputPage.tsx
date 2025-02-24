@@ -24,15 +24,14 @@ export default function OutputPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = React.useState<File | null>(null);
   const [email, setEmail] = React.useState("");
-  const [processErrorMessage, setProcessErrorMessage] = React.useState<
-    string | null
-  >(null); // State to store error/success message on process manuscript
-  const [processingInitiatedSuccesfully, setProcessingInitiatedSuccesfully] =
-    React.useState<boolean>(false); // State to handle processing status
+  const [processErrorMessage, setProcessErrorMessage] = React.useState<string | null>(null);
+  const [processingInitiatedSuccesfully, setProcessingInitiatedSuccesfully] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [selectedConference, setSelectedConference] =
-    React.useState<string>("");
-  const conferences = ["IEEE", "Lancert", "Nature"];
+  const [selectedConference, setSelectedConference] = React.useState<string>("");
+  const [currentStep, setCurrentStep] = React.useState<number>(1);
+  const [customRequirements, setCustomRequirements] = React.useState<string>("");
+  const [websiteUrl, setWebsiteUrl] = React.useState<string>("");
+  const conferences = ["IEEE", "Lancert", "Nature", "Other"];
 
   //for process manuscript button
   const processBtnClick = async () => {
@@ -42,6 +41,12 @@ export default function OutputPage() {
     formData.append("file", file);
     formData.append("email", email);
     formData.append("journalType", selectedConference);
+    if (selectedConference === "Other") {
+      formData.append("requirements", customRequirements);
+      if (websiteUrl) {
+        formData.append("websiteUrl", websiteUrl);
+      }
+    }
     console.log(formData);
 
     try {
@@ -94,6 +99,122 @@ export default function OutputPage() {
     setFile(uploadedFile);
   };
 
+  const UploadStep = () => {
+    return (
+      <div className="space-y-4">
+        <input
+          type="file"
+          className="hidden"
+          accept=".pdf, .zip, .tex, .tec"
+          ref={fileInputRef}
+          onChange={handleFileUpload}
+        />
+        <div
+          className="border-2 border-dashed rounded-lg p-8 text-center cursor-pointer hover:border-black transition-colors"
+          onClick={handleButtonClick}
+        >
+          <FileUp className="mx-auto h-12 w-12 text-zinc-400" />
+          <div className="mt-4">
+            <p className="text-sm font-medium">
+              {file ? (
+                <span className="text-black">{file.name}</span>
+              ) : (
+                <>
+                  <span className="text-black">Click to upload</span> your manuscript
+                </>
+              )}
+            </p>
+            <p className="text-xs text-zinc-500 mt-1">PDF, ZIP, TEX, TEC</p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const JournalStep = () => {
+    return (
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="w-full justify-between">
+                {selectedConference || "Select Conference"}
+                <ChevronDown className="h-4 w-4 opacity-50" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-full">
+              {conferences.map((conference) => (
+                <DropdownMenuItem
+                  key={conference}
+                  onClick={() => {
+                    setSelectedConference(conference);
+                    if (conference !== "Other") {
+                      setCustomRequirements("");
+                      setWebsiteUrl("");
+                    }
+                  }}
+                >
+                  {conference}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        
+        {selectedConference === "Other" && (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="website" className="text-sm text-zinc-600">
+                Website URL (optional)
+              </label>
+              <Input
+                id="website"
+                type="url"
+                placeholder="e.g., https://ieeeaccess.ieee.org/guide-for-authors/submission-guidelines/"
+                value={websiteUrl}
+                onChange={(e) => setWebsiteUrl(e.target.value)}
+                className="font-mono text-sm"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <label htmlFor="requirements" className="text-sm text-zinc-600">
+                Requirements
+              </label>
+              <textarea
+                id="requirements"
+                className="w-full min-h-[100px] rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                placeholder="Please enter the specific requirements for your paper..."
+                value={customRequirements}
+                onChange={(e) => setCustomRequirements(e.target.value)}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const EmailStep = () => {
+    return (
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <div className="relative">
+            <Mail className="absolute left-3 top-3 h-4 w-4 text-zinc-400" />
+            <Input
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              className="pl-10"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen p-6 flex flex-col items-center">
       <Card className="w-full max-w-3xl">
@@ -102,98 +223,62 @@ export default function OutputPage() {
           <CardDescription>
             Upload your manuscript and we'll process it for you
           </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-4">
-            <input
-              type="file"
-              className="hidden"
-              accept=".pdf, .zip, .tex, .tec"
-              ref={fileInputRef}
-              onChange={handleFileUpload}
-            />
-            <div
-              className="border-2 border-dashed rounded-lg p-8 text-center cursor-pointer hover:border-black transition-colors"
-              onClick={handleButtonClick}
-            >
-              <FileUp className="mx-auto h-12 w-12 text-zinc-400" />
-              <div className="mt-4">
-                <p className="text-sm font-medium">
-                  {file ? (
-                    <span className="text-black">{file.name}</span>
-                  ) : (
-                    <>
-                      <span className="text-black">Click to upload</span> your
-                      manuscript
-                    </>
-                  )}
-                </p>
-                <p className="text-xs text-zinc-500 mt-1">PDF, ZIP, TEX, TEC</p>
-              </div>
-            </div>
-          </div>
-
-          {/* {pdfUrl && (
-                        <div className="w-full h-[50vh] border border-zinc-200 rounded-lg overflow-hidden bg-white">
-                            <iframe
-                                src={pdfUrl}
-                                className="w-full h-full"
-                                title="PDF Viewer"
-                            />
-                        </div>
-                    )} */}
-
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full justify-between">
-                    {selectedConference || "Select Conference"}
-                    <ChevronDown className="h-4 w-4 opacity-50" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-full">
-                  {conferences.map((conference) => (
-                    <DropdownMenuItem
-                      key={conference}
-                      onClick={() => setSelectedConference(conference)}
-                    >
-                      {conference}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-            <div className="space-y-2">
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-zinc-400" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  className="pl-10"
-                  value={email}
-                  onChange={(e: {
-                    target: { value: React.SetStateAction<string> };
-                  }) => setEmail(e.target.value)}
+          <div className="flex justify-center items-center space-x-2 mt-4">
+            {[1, 2, 3].map((step) => (
+              <React.Fragment key={step}>
+                <div
+                  className={`w-3 h-3 rounded-full ${
+                    currentStep >= step ? "bg-blue-600" : "bg-gray-200"
+                  }`}
                 />
-              </div>
-            </div>
+                {step < 3 && (
+                  <div className={`w-12 h-0.5 ${
+                    currentStep > step ? "bg-blue-600" : "bg-gray-200"
+                  }`} />
+                )}
+              </React.Fragment>
+            ))}
           </div>
+        </CardHeader>
+
+        <CardContent className="space-y-6">
+          {currentStep === 1 && <UploadStep />}
+          {currentStep === 2 && <JournalStep />}
+          {currentStep === 3 && <EmailStep />}
         </CardContent>
-        <CardFooter>
-          <Button
-            size="lg"
-            className="w-full bg-black hover:bg-zinc-800"
-            disabled={!file || !email || !selectedConference || loading}
-            onClick={processBtnClick}
-          >
-            {loading ? (
-              <ThreeDots height="40" width="40" color="white" radius="10" />
-            ) : (
-              "Process Manuscript"
-            )}
-          </Button>
+
+        <CardFooter className="flex justify-between">
+          {currentStep > 1 && (
+            <Button
+              variant="outline"
+              onClick={() => setCurrentStep((prev) => prev - 1)}
+            >
+              Previous
+            </Button>
+          )}
+          {currentStep < 3 ? (
+            <Button
+              onClick={() => setCurrentStep((prev) => prev + 1)}
+              disabled={
+                (currentStep === 1 && !file) ||
+                (currentStep === 2 && (!selectedConference || (selectedConference === "Other" && !customRequirements)))
+              }
+            >
+              Next
+            </Button>
+          ) : (
+            <Button
+              className="w-full bg-black hover:bg-zinc-800"
+              disabled={!file || !email || !selectedConference || (selectedConference === "Other" && !customRequirements) || loading}
+              onClick={processBtnClick}
+            >
+              {loading ? (
+                <ThreeDots height="40" width="40" color="white" radius="10" />
+              ) : (
+                "Process Manuscript"
+              )}
+            </Button>
+          )}
         </CardFooter>
       </Card>
 
