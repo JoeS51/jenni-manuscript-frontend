@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { ChevronDown } from "lucide-react";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,7 +35,7 @@ export const JournalStep: React.FC<JournalStepProps> = ({
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="w-full justify-between">
               {selectedConference || "Select Conference"}
-              <ChevronDown className="h-4 w-4 opacity-50" />
+              <ChevronDownIcon className="h-4 w-4 opacity-50" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-full">
