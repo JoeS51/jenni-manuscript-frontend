@@ -11,11 +11,16 @@ import {
 
 interface JournalStepProps {
   selectedConference: string;
-  setSelectedConference: (conference: string) => void;
+  setSelectedConference: (value: string) => void;
   customRequirements: string;
-  setCustomRequirements: (requirements: string) => void;
+  setCustomRequirements: (value: string) => void;
   websiteUrl: string;
-  setWebsiteUrl: (url: string) => void;
+  setWebsiteUrl: (value: string) => void;
+  conferences: string[];
+  customJournalName: string;
+  setCustomJournalName: (value: string) => void;
+  onSaveJournal: () => Promise<void>;
+  isSavingJournal: boolean;
 }
 
 export const JournalStep: React.FC<JournalStepProps> = ({
@@ -25,9 +30,12 @@ export const JournalStep: React.FC<JournalStepProps> = ({
   setCustomRequirements,
   websiteUrl,
   setWebsiteUrl,
+  conferences,
+  customJournalName,
+  setCustomJournalName,
+  onSaveJournal,
+  isSavingJournal
 }) => {
-  const conferences = ["IEEE", "Lancet", "Nature", "Other"];
-
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -39,18 +47,18 @@ export const JournalStep: React.FC<JournalStepProps> = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-full">
-            {conferences.map((conference) => (
+            {conferences.map((conferenceName) => (
               <DropdownMenuItem
-                key={conference}
+                key={conferenceName}
                 onClick={() => {
-                  setSelectedConference(conference);
-                  if (conference !== "Other") {
+                  setSelectedConference(conferenceName);
+                  if (conferenceName !== "Other") {
                     setCustomRequirements("");
                     setWebsiteUrl("");
                   }
                 }}
               >
-                {conference}
+                {conferenceName}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
@@ -59,6 +67,20 @@ export const JournalStep: React.FC<JournalStepProps> = ({
 
       {selectedConference === "Other" && (
         <div className="space-y-4">
+          <div className="space-y-2">
+            <label htmlFor="journalName" className="text-sm text-zinc-600">
+              Journal Name
+            </label>
+            <Input
+              id="journalName"
+              type="text"
+              placeholder="Enter journal name..."
+              value={customJournalName}
+              onChange={(e) => setCustomJournalName(e.target.value)}
+              className="font-mono text-sm"
+            />
+          </div>
+
           <div className="space-y-2">
             <label htmlFor="website" className="text-sm text-zinc-600">
               Website URL (optional)
@@ -85,6 +107,14 @@ export const JournalStep: React.FC<JournalStepProps> = ({
               onChange={(e) => setCustomRequirements(e.target.value)}
             />
           </div>
+
+          <Button 
+            onClick={onSaveJournal}
+            disabled={isSavingJournal || !customJournalName || !customRequirements}
+            className="w-full"
+          >
+            {isSavingJournal ? "Saving..." : "Save Journal Template"}
+          </Button>
         </div>
       )}
     </div>

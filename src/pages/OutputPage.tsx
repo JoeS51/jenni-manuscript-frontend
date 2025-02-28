@@ -1,4 +1,5 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import { getConferences, addConference } from '../api/conferenceApi';
 import { sendFile } from "../api/ChatCompletion";
 import { UploadStep } from "../components/manuscript/UploadStep";
 import { JournalStep } from "../components/manuscript/JournalStep";
@@ -10,23 +11,34 @@ import { ManuscriptHeader } from "../components/manuscript/ManuscriptHeader";
 import { NavigationButtons } from "../components/manuscript/NavigationButtons";
 
 export default function OutputPage() {
-  const [file, setFile] = React.useState<File | null>(null);
-  const [email, setEmail] = React.useState("");
-  const [processErrorMessage, setProcessErrorMessage] = React.useState<
-    string | null
-  >(null);
-  const [processingInitiatedSuccesfully, setProcessingInitiatedSuccesfully] =
-    React.useState<boolean>(false);
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [selectedConference, setSelectedConference] =
-    React.useState<string>("");
-  const [currentStep, setCurrentStep] = React.useState<number>(1);
-  const [customRequirements, setCustomRequirements] =
-    React.useState<string>("");
-  const [websiteUrl, setWebsiteUrl] = React.useState<string>("");
+  const [file, setFile] = useState<File | null>(null);
+  const [email, setEmail] = useState("");
+  const [processErrorMessage, setProcessErrorMessage] = useState<string | null>(null);
+  const [processingInitiatedSuccesfully, setProcessingInitiatedSuccesfully] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [selectedConference, setSelectedConference] = useState<string>("");
+  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [customRequirements, setCustomRequirements] = useState<string>("");
+  const [websiteUrl, setWebsiteUrl] = useState<string>("");
+  const [conferences, setConferences] = useState<string[]>([]);
+  const [customJournalName, setCustomJournalName] = useState<string>("");
+  const [isSavingJournal, setIsSavingJournal] = useState(false);
   const totalSteps = 3;
 
-  // Process manuscript button handler
+  useEffect(() => {
+    const loadConferences = async () => {
+      try {
+        const fetchedConferences = await getConferences();
+        const conferenceNames = fetchedConferences.map(conf => conf.name);
+        setConferences([...conferenceNames, "Other"]);
+      } catch (error) {
+        console.error('Error loading conferences:', error);
+      }
+    };
+
+    loadConferences();
+  }, []);
+
   const processBtnClick = async () => {
     if (file == null) return;
     setLoading(true);
@@ -52,7 +64,6 @@ export default function OutputPage() {
       }
     } catch (err: any) {
       console.error("Error processing file upload:", err);
-
       if (err.response) {
         setProcessErrorMessage(
           `Error: ${err.response.status} - ${
@@ -71,7 +82,33 @@ export default function OutputPage() {
     }
   };
 
-  // Determine if the Next button should be disabled
+  const saveNewJournal = async () => {
+    if (!customJournalName || !customRequirements) return;
+    
+    setIsSavingJournal(true);
+    try {
+      await addConference({
+        name: customJournalName,
+        website_url: websiteUrl || undefined,
+        requirements: customRequirements
+      });
+      
+      const fetchedConferences = await getConferences();
+      const conferenceNames = fetchedConferences.map(conf => conf.name);
+      setConferences([...conferenceNames, "Other"]);
+      
+      setSelectedConference(customJournalName);
+      setCustomJournalName("");
+      
+      alert('Successfully saved new journal template!');
+    } catch (error) {
+      console.error('Error saving new journal:', error);
+      alert('Failed to save journal template. Please try again.');
+    } finally {
+      setIsSavingJournal(false);
+    }
+  };
+
   const isNextDisabled = () => {
     if (currentStep === 1) return !file;
     if (currentStep === 2) {
@@ -83,7 +120,6 @@ export default function OutputPage() {
     return false;
   };
 
-  // Determine if the Submit button should be disabled
   const isSubmitDisabled = () => {
     return (
       !file ||
@@ -97,14 +133,15 @@ export default function OutputPage() {
     <div className="min-h-screen pt-6 flex flex-col items-center">
       <ManuscriptHeader />
       <div className="w-full max-w-3xl bg-white rounded-lg border border-zinc-200 p-6">
-        {/* Header */}
-
-        {/* Progress Indicator */}
         <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />
 
-        {/* Content */}
         <div className="space-y-6 mb-8">
-          {currentStep === 1 && <UploadStep file={file} setFile={setFile} />}
+          {currentStep === 1 && (
+            <UploadStep 
+              file={file} 
+              setFile={setFile}
+            />
+          )}
           {currentStep === 2 && (
             <JournalStep
               selectedConference={selectedConference}
@@ -113,12 +150,16 @@ export default function OutputPage() {
               setCustomRequirements={setCustomRequirements}
               websiteUrl={websiteUrl}
               setWebsiteUrl={setWebsiteUrl}
+              conferences={conferences}
+              customJournalName={customJournalName}
+              setCustomJournalName={setCustomJournalName}
+              onSaveJournal={saveNewJournal}
+              isSavingJournal={isSavingJournal}
             />
           )}
           {currentStep === 3 && <EmailStep email={email} setEmail={setEmail} />}
         </div>
 
-        {/* Navigation Buttons */}
         <NavigationButtons
           currentStep={currentStep}
           totalSteps={totalSteps}
@@ -130,12 +171,10 @@ export default function OutputPage() {
         />
       </div>
 
-      {/* Processing notification */}
       {processingInitiatedSuccesfully && (
         <ProcessingNotification email={email} />
       )}
 
-      {/* Error message */}
       {processErrorMessage && (
         <ErrorNotification errorMessage={processErrorMessage} />
       )}
